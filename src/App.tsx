@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 interface Todo {
@@ -9,11 +9,24 @@ function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [input, setInput] = useState("");
 
+  useEffect(() => {
+    let todoString = localStorage.getItem('todos')
+    if (todoString) {
+      setTodos(JSON.parse(todoString))
+    }
+  }, [])
+
   const onClickAdd = () => {
     const todo: Todo = { text: input };
-    setTodos([...todos, todo]);
+    const newTodoList = [...todos, todo];
+    setTodos(newTodoList);
     setInput("");
+    storeInLocalStorage(newTodoList);
   };
+
+  const storeInLocalStorage = (newTodoList: Todo[]) => {
+    localStorage.setItem('todos', JSON.stringify(newTodoList))
+  }
 
   return (
     <div className="App">
