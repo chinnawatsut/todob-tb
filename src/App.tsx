@@ -36,10 +36,31 @@ const todoReducer = (state: TodoState, action: Action) => {
   }
 };
 
+const useTodoFilter = (todos: Todo[]) => {
+  const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
+
+  const filteredTodos = useMemo(() => {
+    switch (filter) {
+      case "all":
+        return todos;
+      case "active":
+        return todos.filter((todo) => !todo.completed);
+      case "completed":
+        return todos.filter((todo) => todo.completed);
+      default:
+        return todos;
+    }
+  }, [filter, todos]);
+  return {
+    setFilter,
+    filteredTodos,
+  };
+};
+
 function App() {
   const [state, dispatch] = useReducer(todoReducer, initialState);
   const { todos } = state;
-  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const { setFilter, filteredTodos } = useTodoFilter(todos);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onClickAdd = () => {
@@ -49,21 +70,8 @@ function App() {
       completed: false,
     };
     dispatch({ type: "ADD", payload: newTodo });
-    inputRef.current!.value = '';
+    inputRef.current!.value = "";
   };
-
-  const filteredTodos = useMemo(() => {
-    switch (filter) {
-      case 'all':
-        return todos;
-      case 'active':
-        return todos.filter((todo) => !todo.completed);
-      case 'completed':
-        return todos.filter((todo) => todo.completed);
-      default:
-        return todos;
-    }
-  }, [filter, todos]);
 
   return (
     <div className="App">
@@ -73,11 +81,11 @@ function App() {
       </div>
 
       <div>
-        <button onClick={() => setFilter('all')}>All</button>
-        <button onClick={() => setFilter('active')}>Active</button>
-        <button onClick={() => setFilter('completed')}>Completed</button>
+        <button onClick={() => setFilter("all")}>All</button>
+        <button onClick={() => setFilter("active")}>Active</button>
+        <button onClick={() => setFilter("completed")}>Completed</button>
       </div>
-      
+
       <div>
         <ul>
           {filteredTodos.map((todo, index) => {
