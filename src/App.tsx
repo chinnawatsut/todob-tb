@@ -1,9 +1,10 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useMemo, useReducer, useState } from "react";
 import "./App.css";
 
 interface Todo {
   text: string;
   id: number;
+  completed: boolean;
 }
 
 interface TodoState {
@@ -45,11 +46,13 @@ const todoReducer = (state: TodoState, action: Action) => {
 function App() {
   const [state, dispatch] = useReducer(todoReducer, initialState);
   const { todos, input } = state;
+  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
 
   const onClickAdd = () => {
     const newTodo: Todo = {
       text: input,
       id: Date.now(),
+      completed: false,
     };
     dispatch({ type: "ADD", payload: newTodo });
   };
@@ -57,6 +60,19 @@ function App() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "UPDATE", payload: e.target.value });
   };
+
+  const filteredTodos = useMemo(() => {
+    switch (filter) {
+      case 'all':
+        return todos;
+      case 'active':
+        return todos.filter((todo) => !todo.completed);
+      case 'completed':
+        return todos.filter((todo) => todo.completed);
+      default:
+        return todos;
+    }
+  }, [filter, todos]);
 
   return (
     <div className="App">
@@ -66,8 +82,14 @@ function App() {
       </div>
 
       <div>
+        <button onClick={() => setFilter('all')}>All</button>
+        <button onClick={() => setFilter('active')}>Active</button>
+        <button onClick={() => setFilter('completed')}>Completed</button>
+      </div>
+      
+      <div>
         <ul>
-          {todos.map((todo, index) => {
+          {filteredTodos.map((todo, index) => {
             return <TodoItem key={index} todo={todo} />;
           })}
         </ul>
