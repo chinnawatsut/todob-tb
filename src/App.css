@@ -1,5 +1,9 @@
 .App {
-  text-align: center;
+  background-color: #282c34;
+  min-height: 100vh;
+  padding: 5vh 5vh;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
 .App-logo {
@@ -22,6 +26,10 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.todo-box {
+
 }
 
 .App-link {
