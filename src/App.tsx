@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 
 interface Todo {
@@ -38,13 +38,25 @@ function App() {
       <div>
         <ul>
           {todos.map((todo, index) => {
-            return <li key={index}>{todo.text}</li>;
+            return <TodoItem key={index} todo={todo} />
           })}
           {/* key prop helps React keep track of each item in the list, so it knows which items have been added, removed, or changed. */}
         </ul>
       </div>
     </div>
   );
+}
+
+interface TodoItemProps {
+  todo: Todo;
+}
+
+const TodoItem = (props: TodoItemProps) => {
+  const printTodo = useCallback(() => {
+    console.log('Todo: ' + props.todo.text)
+  }, [])
+  
+  return <li onClick={printTodo}>{props.todo.text}</li>
 }
 
 export default App;
