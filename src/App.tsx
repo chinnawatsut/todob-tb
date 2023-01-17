@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useReducer, useState } from "react";
+import { useCallback, useMemo, useReducer, useRef, useState } from "react";
 import "./App.css";
 
 interface Todo {
@@ -9,16 +9,14 @@ interface Todo {
 
 interface TodoState {
   todos: Todo[];
-  input: string;
 }
 
 interface Action {
-  type: "ADD" | "UPDATE";
+  type: "ADD";
   payload: Todo | string;
 }
 const initialState: TodoState = {
   todos: JSON.parse(localStorage.getItem("todos") || "[]"),
-  input: "",
 };
 
 const todoReducer = (state: TodoState, action: Action) => {
@@ -33,11 +31,6 @@ const todoReducer = (state: TodoState, action: Action) => {
         todos: [...state.todos, action.payload as Todo],
         input: "",
       };
-    case "UPDATE":
-      return {
-        ...state,
-        input: action.payload as string,
-      };
     default:
       return state;
   }
@@ -45,20 +38,18 @@ const todoReducer = (state: TodoState, action: Action) => {
 
 function App() {
   const [state, dispatch] = useReducer(todoReducer, initialState);
-  const { todos, input } = state;
+  const { todos } = state;
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onClickAdd = () => {
     const newTodo: Todo = {
-      text: input,
+      text: inputRef.current!.value,
       id: Date.now(),
       completed: false,
     };
     dispatch({ type: "ADD", payload: newTodo });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "UPDATE", payload: e.target.value });
+    inputRef.current!.value = '';
   };
 
   const filteredTodos = useMemo(() => {
@@ -77,7 +68,7 @@ function App() {
   return (
     <div className="App">
       <div>
-        <input value={input} onChange={handleChange} />
+        <input ref={inputRef} />
         <button onClick={onClickAdd}>Add Todo</button>
       </div>
 
