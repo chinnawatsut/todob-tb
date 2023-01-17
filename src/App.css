@@ -6,6 +6,14 @@
   color: white;
 }
 
+.App-Light {
+  background-color: #ffffff;
+  color: black;
+  min-height: 100vh;
+  padding: 5vh 5vh;
+  font-size: calc(10px + 2vmin);
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
