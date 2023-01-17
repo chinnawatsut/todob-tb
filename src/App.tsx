@@ -64,12 +64,14 @@ const useTodoFilter = (todos: Todo[]) => {
     filteredTodos,
   };
 };
+const ThemeContext = createContext("dark");
 
 function App() {
   const [state, dispatch] = useReducer(todoReducer, initialState);
   const { todos } = state;
   const inputRef = useRef<HTMLInputElement>(null);
   const { setFilter, filteredTodos } = useTodoFilter(todos);
+  const [theme, setTheme] = useState("dark");
 
   const onClickAdd = () => {
     const newTodo: Todo = {
@@ -82,26 +84,33 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <div>
-        <input ref={inputRef} />
-        <button onClick={onClickAdd}>Add Todo</button>
-      </div>
+    <ThemeContext.Provider value={theme}>
+      <div className={theme === "dark" ? "App" : "App-Light"}>
+        <div>
+          <input ref={inputRef} />
+          <button onClick={onClickAdd}>Add Todo</button>
+        </div>
 
-      <div>
-        <button onClick={() => setFilter("all")}>All</button>
-        <button onClick={() => setFilter("active")}>Active</button>
-        <button onClick={() => setFilter("completed")}>Completed</button>
-      </div>
+        <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+          Toggle theme
+        </button>
 
-      <div>
-        <ul>
-          {filteredTodos.map((todo, index) => {
-            return <TodoItem key={index} todo={todo} />;
-          })}
-        </ul>
+        <ThemePreview />
+        <div>
+          <button onClick={() => setFilter("all")}>All</button>
+          <button onClick={() => setFilter("active")}>Active</button>
+          <button onClick={() => setFilter("completed")}>Completed</button>
+        </div>
+
+        <div>
+          <ul>
+            {filteredTodos.map((todo, index) => {
+              return <TodoItem key={index} todo={todo} />;
+            })}
+          </ul>
+        </div>
       </div>
-    </div>
+    </ThemeContext.Provider>
   );
 }
 
@@ -115,6 +124,11 @@ const TodoItem = (props: TodoItemProps) => {
   }, [props.todo.text]);
 
   return <li onClick={printTodo}>{props.todo.text}</li>;
+};
+
+const ThemePreview = () => {
+  const theme = useContext(ThemeContext);
+  return <div>{theme === "dark" ? "🌒" : "🌞"}</div>;
 };
 
 export default App;
