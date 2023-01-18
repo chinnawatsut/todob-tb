@@ -62,7 +62,7 @@ function App() {
   };
 
 
-  // step: start here line 81 then 67
+  // step: start id, status in todo -> create function return by filter -> use Memo
 
   const filteredTodos = useMemo(() => {
     console.log('log->>')
