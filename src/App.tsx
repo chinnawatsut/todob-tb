@@ -52,12 +52,12 @@ interface TodoItemProps {
 }
 
 const TodoItem = (props: TodoItemProps) => {
-  // const printTodo = () => {
-  //   console.log('Todo: ' + props.todo.text)
-  // }
-  const printTodo = useCallback(() => {
+  const printTodo = () => {
     console.log('Todo: ' + props.todo.text)
-  }, [props.todo.text])
+  }
+  // const printTodo = useCallback(() => {
+  //   console.log('Todo: ' + props.todo.text)
+  // }, [props.todo.text])
   
   return <li onClick={printTodo}>{props.todo.text}</li>
 }
