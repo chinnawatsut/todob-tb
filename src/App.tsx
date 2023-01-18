@@ -16,6 +16,10 @@ function App() {
     }
   }, [])
 
+  // useEffect(() => {
+  //   localStorage.setItem('todos', JSON.stringify(todos))
+  // }, [todos])
+
   const onClickAdd = () => {
     const todo: Todo = { text: input };
     const newTodoList = [...todos, todo];
@@ -23,6 +27,7 @@ function App() {
     setInput("");
     storeInLocalStorage(newTodoList);
   };
+
 
   const storeInLocalStorage = (newTodoList: Todo[]) => {
     localStorage.setItem('todos', JSON.stringify(newTodoList))
