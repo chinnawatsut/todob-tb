@@ -61,7 +61,11 @@ function App() {
     dispatch({ type: "UPDATE", payload: e.target.value });
   };
 
+
+  // step: start here line 81 then 67
+
   const filteredTodos = useMemo(() => {
+    console.log('log->>')
     switch (filter) {
       case 'all':
         return todos;
@@ -73,6 +77,21 @@ function App() {
         return todos;
     }
   }, [filter, todos]);
+
+  // const filteredTodos = () => {
+  //   console.log('log->>')
+  //   switch (filter) {
+  //     case 'all':
+  //       return todos;
+  //     case 'active':
+  //       return todos.filter((todo) => !todo.completed);
+  //     case 'completed':
+  //       return todos.filter((todo) => todo.completed);
+  //     default:
+  //       return todos;
+  //   }
+  // }
+
 
   return (
     <div className="App">
@@ -92,6 +111,9 @@ function App() {
           {filteredTodos.map((todo, index) => {
             return <TodoItem key={index} todo={todo} />;
           })}
+          {/* {filteredTodos().map((todo, index) => {
+            return <TodoItem key={index} todo={todo} />;
+          })} */}
         </ul>
       </div>
     </div>
