@@ -11,7 +11,9 @@ function App() {
 
   const onClickAdd = () => {
     const todo: Todo = { text: input };
-    setTodos([...todos, todo]);
+    const temp = todos
+    temp.push(todo)
+    setTodos(temp);
     setInput("");
   };
 
