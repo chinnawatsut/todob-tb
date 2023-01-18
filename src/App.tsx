@@ -1,4 +1,6 @@
+import React, { SetStateAction } from "react";
 import {
+  Dispatch,
   createContext,
   useCallback,
   useContext,
@@ -64,7 +66,13 @@ const useTodoFilter = (todos: Todo[]) => {
     filteredTodos,
   };
 };
-const ThemeContext = createContext("dark");
+const ThemeContext = createContext<{
+  theme: string;
+  setTheme: Dispatch<SetStateAction<string>>;
+}>({
+  theme: "dark",
+  setTheme: () => {},
+});
 
 function App() {
   const [state, dispatch] = useReducer(todoReducer, initialState);
@@ -84,7 +92,7 @@ function App() {
   };
 
   return (
-    <ThemeContext.Provider value={theme}>
+    <ThemeContext.Provider value={{ theme, setTheme }}>
       <div className={theme === "dark" ? "App" : "App-Light"}>
         <div>
           <input ref={inputRef} />
@@ -127,8 +135,16 @@ const TodoItem = (props: TodoItemProps) => {
 };
 
 const ThemePreview = () => {
-  const theme = useContext(ThemeContext);
-  return <div>{theme === "dark" ? "🌒" : "🌞"}</div>;
+  const {theme, setTheme} = useContext(ThemeContext);
+
+  return (
+    <div>
+      <span>{theme === "dark" ? "🌒" : "🌞"}</span>
+      <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+        Toggle theme top
+      </button>
+    </div>
+  );
 };
 
 export default App;
